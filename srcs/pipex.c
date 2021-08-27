@@ -18,22 +18,44 @@ void	ft_error(void)
 	exit(EXIT_FAILURE);
 }
 
-void	exec(char *cmd, char **env)
+char	*pathfinder(char *cmd, char **env)
 {
-	int i;
+	char	**paths;
+	char	*part_path;
+	char	*path;
+	int		i;
 
 	i = -1;
-	cmd = NULL;
-	while (env[++i])
-		printf("%s\n", env[i]);
+	while (!ft_strnstr(env[++i], "PATH", 4))
+		;
+	paths = ft_split(env[i] + 5, ':');
+	i = -1;
+	while (paths[++i])
+	{
+		part_path = ft_strjoin(paths[i], "/");
+		path = ft_strjoin(part_path, cmd);
+		free (part_path);
+		if (!access(path, F_OK))
+			return (path);
+	}
+	return (0);
+}
+
+void	exec(char *argv, char **env)
+{
+	char	**cmd;
+
+	cmd = ft_split(argv, ' ');
+	if (execve(pathfinder(cmd[0], env), cmd, env) == -1)
+		ft_error();
 }
 
 void	begin_pipe(char **argv, char **env, int *fd)
 {
 	int inputfd;
 
-	inputfd = open(argv[1], O_RDONLY);
-	if (!inputfd)
+	inputfd = open(argv[1], O_RDONLY, 0777);
+	if (inputfd == -1)
 		ft_error();
 	dup2(fd[1], STDOUT_FILENO);
 	dup2(inputfd, STDIN_FILENO);
@@ -45,8 +67,8 @@ void	end_pipe(char **argv, char **env, int *fd)
 {
 	int	outputfile;
 
-	outputfile = open(argv[5], O_WRONLY | O_CREAT);
-	if (!outputfile)
+	outputfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	if (outputfile == -1)
 		ft_error();
 	dup2(fd[0], STDIN_FILENO);
 	dup2(outputfile, STDOUT_FILENO);
@@ -59,7 +81,7 @@ int main(int argc, char **argv, char **env)
 	int	fd[2];
 	int	pid;
 
-	argc = 0;
+	argc++;
 	if (pipe(fd) == -1)
 		ft_error();
 	pid = fork();

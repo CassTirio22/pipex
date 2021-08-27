@@ -25,6 +25,9 @@ SRCS		=	pipex.c \
 OBJS		=	$(addprefix srcs/, ${SRCS:.c=.o})
 
 NAME		=	pipex.a
+EXEC		=	pipex
+
+LIBFT		=	./libft
 
 CC			=	gcc
 CFLAGS		=	-Wall -Wextra -Werror
@@ -34,11 +37,11 @@ CFLAGS		=	-Wall -Wextra -Werror
 				@echo "${LIGHTPURPLE}Compilation : $< --> .o${RESET}"
 
 $(NAME):		${OBJS}
+				@make -C ${LIBFT} full
+				@cp ${LIBFT}/libft.a ${NAME}
 				@ar -rcs ${NAME} ${OBJS}
 				@ranlib ${NAME}
-				@${CC} ${CFLAGS} ${NAME}
-				@mv a.out pipex
-
+				@${CC} ${CFLAGS} ${NAME} -o ${EXEC}
 all:			${NAME}
 
 clean:			
