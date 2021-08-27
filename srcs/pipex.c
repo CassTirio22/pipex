@@ -6,68 +6,70 @@
 /*   By: ctirions <ctirions@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/25 16:29:05 by ctirions          #+#    #+#             */
-/*   Updated: 2021/08/25 18:21:39 by ctirions         ###   ########.fr       */
+/*   Updated: 2021/08/27 20:38:47 by ctirions         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-void	arg_error(int argc)
+void	ft_error(void)
 {
-	if (argc != 2)
-	{
-		write(1, "Wrong number of arguments !\n", 28);
-		exit(0);
-	}
+	perror("Error !\n");
+	exit(EXIT_FAILURE);
 }
 
-char	*make_cmd(char **argv)
+void	exec(char *cmd, char **env)
 {
-	char	*cmd;
-	int		size_cmd;
-	int		i;
-	int		j;
+	int i;
 
-	size_cmd = strlen(argv[1]) + strlen(argv[2]) + strlen(argv[3]) + strlen(argv[4]) + 5;
-	cmd = malloc(sizeof(char) * size_cmd);
-	if (!cmd)
-		return (0);
-	cmd[size_cmd - 1] = 0;
-	i = 0;
-	j = -1;
-	cmd[0] = '<';
-	while (argv[1][++j])
-		cmd[++i] = argv[1][j];
-	cmd[++i] = ' ';
-	j = -1;
-	while (argv[2][++j])
-		cmd[++i] = argv[2][j];
-	j = -1;
-	cmd[++i] = '|';
-	while (argv[3][++j])
-		cmd[++i] = argv[3][j];
-	j = -1;
-	cmd[++i] = '>';
-	while (argv[4][++j])
-		cmd[++i] = argv[4][j];
-	return (cmd);
-
+	i = -1;
+	cmd = NULL;
+	while (env[++i])
+		printf("%s\n", env[i]);
 }
 
-int	main(int argc, char **argv)
+void	begin_pipe(char **argv, char **env, int *fd)
 {
-	//char	*cmd;
-	FILE	*fp;
-	char	path[1035];
+	int inputfd;
 
-	fp = popen(argv[1], "r");
-	if (!fp)
-		return (0);
-	while (fgets(path, sizeof(path), fp))
-		;//printf("%s", path);
-	pclose(fp);
-	arg_error(argc);
-	//cmd = make_cmd(argv);
-	//system(cmd);
+	inputfd = open(argv[1], O_RDONLY);
+	if (!inputfd)
+		ft_error();
+	dup2(fd[1], STDOUT_FILENO);
+	dup2(inputfd, STDIN_FILENO);
+	close(fd[0]);
+	exec(argv[2], env);
+}
+
+void	end_pipe(char **argv, char **env, int *fd)
+{
+	int	outputfile;
+
+	outputfile = open(argv[5], O_WRONLY | O_CREAT);
+	if (!outputfile)
+		ft_error();
+	dup2(fd[0], STDIN_FILENO);
+	dup2(outputfile, STDOUT_FILENO);
+	close(fd[1]);
+	exec(argv[3], env);
+}
+
+int main(int argc, char **argv, char **env)
+{
+	int	fd[2];
+	int	pid;
+
+	argc = 0;
+	if (pipe(fd) == -1)
+		ft_error();
+	pid = fork();
+	if (pid == -1)
+		ft_error();
+	if (!pid)
+		begin_pipe(argv, env, fd);
+	waitpid(pid, 0, 0);
+	end_pipe(argv, env, fd);
+	close(fd[0]);
+	close(fd[1]);
 	return (0);
 }
