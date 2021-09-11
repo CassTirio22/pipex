@@ -6,7 +6,7 @@
 #    By: ctirions <ctirions@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/25 16:13:42 by ctirions          #+#    #+#              #
-#    Updated: 2021/09/11 12:30:22 by ctirions         ###   ########.fr        #
+#    Updated: 2021/09/11 12:42:41 by ctirions         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ WHITE		=	$(shell tput -Txterm setaf 7)
 RESET		=	$(shell tput -Txterm sgr0)
 
 SRCS		=	pipex.c \
+				pipe.c
 
 OBJS		=	$(addprefix srcs/, ${SRCS:.c=.o})
 
