@@ -6,7 +6,7 @@
 #    By: ctirions <ctirions@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/25 16:13:42 by ctirions          #+#    #+#              #
-#    Updated: 2021/09/11 12:21:32 by ctirions         ###   ########.fr        #
+#    Updated: 2021/09/11 12:30:22 by ctirions         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,10 +46,12 @@ all:			${NAME}
 
 clean:			
 				@rm -f ${OBJS}
+				@make -C ${LIBFT} clean
 				@echo "${RED}Clean done !${RESET}"
 
 fclean:			clean
 				@rm -f ${NAME} ${EXEC}
+				@make -C ${LIBFT} fclean
 				@echo "${RED}Fclean done !${RESET}"
 
 re:				fclean all
