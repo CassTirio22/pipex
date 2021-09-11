@@ -6,7 +6,7 @@
 #    By: ctirions <ctirions@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/25 16:13:42 by ctirions          #+#    #+#              #
-#    Updated: 2021/08/25 17:01:52 by ctirions         ###   ########.fr        #
+#    Updated: 2021/09/11 12:21:32 by ctirions         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,7 @@ clean:
 				@echo "${RED}Clean done !${RESET}"
 
 fclean:			clean
-				@rm -f ${NAME}
+				@rm -f ${NAME} ${EXEC}
 				@echo "${RED}Fclean done !${RESET}"
 
 re:				fclean all

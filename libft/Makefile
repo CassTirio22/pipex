@@ -6,7 +6,7 @@
 #    By: ctirions <ctirions@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/18 17:05:49 by ctirions          #+#    #+#              #
-#    Updated: 2021/03/18 17:20:16 by ctirions         ###   ########.fr        #
+#    Updated: 2021/09/11 12:20:50 by ctirions         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -101,11 +101,10 @@ NAME		= libft.a
 
 .c.o:
 			@gcc -Wall -Wextra -Werror -c -I./includes $< -o ${<:.c=.o}
-			@echo "${LIGHTPURPLE}Compilation : $< --> .o${RESET}"
 
 $(NAME):	${OBJS} ${OBJS_PRINTF} ${OBJS_GNL}
 			@ar -rcs ${NAME} ${OBJS} ${OBJS_PRINTF} ${OBJS_GNL}
-			@echo "${GREEN}Library done !${RESET}"
+			@echo "${GREEN}Libft done !${RESET}"
 
 all:		${NAME}
 
@@ -116,11 +115,9 @@ full:		all	bonus
 
 clean:
 			@rm -f ${OBJS} ${OBJS_BONUS} ${OBJS_GNL} ${OBJS_PRINTF}
-			@echo "${RED}Clean done !${RESET}"
 
 fclean:		clean
 			@rm -f ${NAME}
-			@echo "${RED}Fclean done !${RESET}"
 			
 re:			fclean all
 
