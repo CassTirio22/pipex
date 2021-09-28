@@ -6,16 +6,19 @@
 /*   By: ctirions <ctirions@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/25 16:29:05 by ctirions          #+#    #+#             */
-/*   Updated: 2021/09/11 12:43:17 by ctirions         ###   ########.fr       */
+/*   Updated: 2021/09/28 16:36:21 by ctirions         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-void	ft_error(void)
+void	ft_error(int flag)
 {
-	perror("Error !\n");
-	exit(EXIT_FAILURE);
+	if (!flag)
+		write(1, "Wrong number of arguments!\n", 27);
+	else if (flag == 1)
+		perror("Error !\n");
+	exit(1);
 }
 
 char	*pathfinder(char *cmd, char **env)
@@ -46,12 +49,13 @@ int	main(int argc, char **argv, char **env)
 	int	fd[2];
 	int	pid;
 
-	argc++;
+	if (argc != 5)
+		ft_error(0);
 	if (pipe(fd) == -1)
-		ft_error();
+		ft_error(1);
 	pid = fork();
 	if (pid == -1)
-		ft_error();
+		ft_error(1);
 	if (!pid)
 		begin_pipe(argv, env, fd);
 	waitpid(pid, 0, 0);
