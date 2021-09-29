@@ -6,7 +6,7 @@
 /*   By: ctirions <ctirions@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/11 12:35:20 by ctirions          #+#    #+#             */
-/*   Updated: 2021/09/28 17:02:41 by ctirions         ###   ########.fr       */
+/*   Updated: 2021/09/29 15:10:22 by ctirions         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,5 @@ void	exec(char *argv, char **env)
 	cmd = ft_split(argv, ' ');
 	if (execve(pathfinder(cmd[0], env), cmd, env) == -1)
 		ft_error(1);
+	free(cmd);
 }
